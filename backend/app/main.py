@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import sys
 
 # Import our database models and setup
-from ..database import engine, Base
-from ..routers import projects, tasks
+from .database import engine, Base
+from .routers import projects, tasks
 
 app = FastAPI(title="Task Manager API", version="1.0.0")
 
