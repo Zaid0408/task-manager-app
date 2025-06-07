@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  database:
+    image: postgres:15 # Downloads PostgreSQL 15 from Docker Hub
+    container_name: task_manager_db # Name of the container
+    environment:
+      POSTGRES_DB: taskmanager # creates a database named taskmanager
+      POSTGRES_USER: admin # creates a user named admin
+      POSTGRES_PASSWORD: password123 # creates a password for the user
+    ports:
+      - "5433:5432" # maps port 5432 of the container to port 5432 on the host
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persists data even after container stops
+    networks:
+      - task_manager_network
+
+  # FastAPI Backend
+  backend:
+    build: ./backend # Builds the backend container
+    container_name: task_manager_backend # Name of the container
+    ports:
+      - "8080:8080" # Maps port 8080 of the container to port 8080 on the host
+    environment:
+      DATABASE_URL: postgresql://admin:password123@database:5432/taskmanager
+    depends_on:
+      - database
+    volumes:
+      - ./backend:/app # Mounts the backend directory to the container
+    networks:
+      - task_manager_network
+
+  # React Frontend
+  frontend:
+    build: ./frontend # Builds the frontend container
+    container_name: task_manager_frontend # Name of the container
+    ports:
+      - "3000:3000" # Maps port 3000 of the container to port 3000 on the host
+    volumes:
+      - ./frontend:/app # Mounts the frontend directory to the container
+      - /app/node_modules # Prevents the node_modules directory from being deleted
+    networks:
+      - task_manager_network
+    stdin_open: true # Allows you to interact with the container
+    tty: true # Allows you to interact with the container
+
+volumes:
+  postgres_data: # Creates a volume named postgres_data
+
+networks:
+  task_manager_network: # Creates a network named task_manager_network
+    driver: bridge # Uses the bridge network
