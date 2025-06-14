@@ -3,6 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+# This file is responsible for connecting to the database
 # Get database URL from environment variable
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://admin:password123@database:5432/taskmanager")
 

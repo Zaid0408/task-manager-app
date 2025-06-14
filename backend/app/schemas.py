@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
 from enum import Enum
-
+# This file defines how data is sent to and from your API
 # Task Status Enum for API
 class TaskStatusEnum(str, Enum):
     TODO = "todo"
@@ -11,7 +11,8 @@ class TaskStatusEnum(str, Enum):
     TESTING = "testing"
     DONE = "done"
 
-# Base Schemas
+# Base Schemas (what you need to create something):
+# define the minimum information needed to create a project or task
 class ProjectBase(BaseModel):
     name: str
     description: Optional[str] = None
@@ -27,7 +28,7 @@ class CommentBase(BaseModel):
 class FileBase(BaseModel):
     filename: str
 
-# Request Schemas (for creating)
+# Request Schemas (for creating new items):
 class ProjectCreate(ProjectBase):
     pass
 
@@ -40,7 +41,7 @@ class CommentCreate(CommentBase):
 class TaskStatusUpdate(BaseModel):
     status: TaskStatusEnum
 
-# Response Schemas (for returning data)
+# Response Schemas (for returning data) (what you get back from the API):
 class Comment(CommentBase):
     id: int
     task_id: int
@@ -77,7 +78,7 @@ class Project(ProjectBase):
     class Config:
         from_attributes = True
 
-# Simplified schemas without relationships (for listing)
+# Simplified schemas without relationships (for listing): These are simplified versions used when listing items
 class TaskSimple(BaseModel):
     id: int
     title: str

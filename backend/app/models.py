@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from enum import Enum as PyEnum
 from .database import Base
-
+# defines how data is stored in the database
 # Task Status Enum
 class TaskStatus(PyEnum):
     TODO = "todo"
