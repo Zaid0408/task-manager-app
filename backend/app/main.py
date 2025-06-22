@@ -16,13 +16,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# database.py prepares the engine (the connection) and Base (the empty catalog).
+# models.py defines the Project and Task blueprints and adds them to the Base catalog.
+# main.py uses the startup event to give the final command: create_all, which takes the blueprints from the catalog and builds the tables using the engine's connection.
+
 # Configure logging
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 # Include routers
-app.include_router(projects.router, prefix="/api/projects", tags=["projects"])
-app.include_router(tasks.router, prefix="/api/tasks", tags=["tasks"])
+app.include_router(projects.router, tags=["projects"]) # Changed path of the APIs
+app.include_router(tasks.router, tags=["tasks"])
 
 @app.get("/")
 async def root():
@@ -32,9 +37,18 @@ async def root():
         "python_executable": sys.executable
     }
 
+# we need to tell our application to actually build these tables. We have the connection, and we have the catalog full of blueprints. 
+# The last step is to give the "build" command.
+# This is a special FastAPI event handler.
+# The code inside this function will run one time, right after the application starts.
 @app.on_event("startup")
 async def startup_event():
     logger.info("🚀 Task Manager API is starting up!")
+    # This is the command that builds the tables.
+    # Base.metadata: "Look at the catalog of all registered table blueprints."
+    # .create_all(): "For each blueprint, check if the table exists in the database. If not, create it."
+    # (bind=engine): "Use this specific database connection for the operation."
+    Base.metadata.create_all(bind=engine)
     logger.info("📊 Database tables created successfully!")
 
 

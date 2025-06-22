@@ -13,6 +13,9 @@ class TaskStatus(PyEnum):
     DONE = "done"
 
 # Projects Table
+# This class defines the 'projects' table. By inheriting from 'Base',
+# we are telling SQLAlchemy, "Register this blueprint in the catalog."
+# By making them inherit from the Base catalog we just created, we are automatically adding these blueprints to our catalog.
 class Project(Base):
     __tablename__ = "projects"
     
@@ -25,6 +28,7 @@ class Project(Base):
     tasks = relationship("Task", back_populates="project")
 
 # Tasks Table
+# This class defines the 'tasks' table and is also registered in the 'Base' catalog.
 class Task(Base):
     __tablename__ = "tasks"
     
