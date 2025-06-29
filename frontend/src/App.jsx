@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import Header from './components/Header.jsx';
+import KanbanBoard from './components/KanbanBoard.jsx';
+import Searchbar from './components/Searchbar.jsx';
+import Sidebar from './components/Sidebar.jsx';
+import Taskbar from './components/Taskbar.jsx';
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('Loading...');

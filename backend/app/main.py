@@ -5,6 +5,7 @@ import sys
 # Import our database models and setup
 from .database import engine, Base
 from .routers import projects, tasks
+from .seed_data import seed_database
 
 app = FastAPI(title="Task Manager API", version="1.0.0")
 
@@ -50,7 +51,9 @@ async def startup_event():
     # (bind=engine): "Use this specific database connection for the operation."
     Base.metadata.create_all(bind=engine)
     logger.info("📊 Database tables created successfully!")
-
+    
+    # Seed the database with dummy data for testing
+    seed_database()
 
 @app.get("/health")
 async def health_check():
