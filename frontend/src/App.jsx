@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Header from './components/Header.jsx';
-import KanbanBoard from './components/KanbanBoard.jsx';
-import Searchbar from './components/Searchbar.jsx';
-import Sidebar from './components/Sidebar.jsx';
-import Taskbar from './components/Taskbar.jsx';
+import Header from './components/Header';
+import KanbanBoard from './components/KanbanBoard';
+import Searchbar from './components/Searchbar';
+import Sidebar from './components/Sidebar';
+import Taskbar from './components/Taskbar';
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('Loading...');
@@ -28,6 +28,8 @@ function App() {
 
   return (
     <div className="App">
+      <Header />
+      <Searchbar />
       <header className="App-header">
         <h1>🚀 Task Manager</h1>
         <p>Welcome to the Task Management System</p>
