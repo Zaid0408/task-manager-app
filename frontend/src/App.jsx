@@ -30,6 +30,7 @@ function App() {
     <div className="App">
       <Header />
       <Searchbar />
+      <Sidebar />
       <header className="App-header">
         <h1>🚀 Task Manager</h1>
         <p>Welcome to the Task Management System</p>

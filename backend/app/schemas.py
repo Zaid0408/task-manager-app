@@ -36,6 +36,7 @@ class TaskCreate(TaskBase):
     project_id: int
 
 class CommentCreate(CommentBase):
+    task_id: int
     pass
 
 class TaskStatusUpdate(BaseModel):
