@@ -1,9 +1,10 @@
 import React from "react";
 import './Sidebar.css'
 
-function Sidebar(){
-    return (
-        <aside className="sidebar-container">
+function Sidebar(isOpenSidebar){
+    return ( 
+        
+        <aside className={`sidebar-container $(isOpenSidebar ? 'sidebar-container':'sidebar-closed')` }>
             <div className="sidebar-projects">
                 <h2 className="sidebar-title" >Projects</h2>
                 <ul className="project-list">
@@ -22,6 +23,7 @@ function Sidebar(){
                 <div className="stat-item">⏳ Todo: 8</div>
             </div>
         </aside>
+        
     )
 }
 

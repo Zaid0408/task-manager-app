@@ -9,6 +9,11 @@ import Taskbar from './components/Taskbar';
 function App() {
   const [backendStatus, setBackendStatus] = useState('Loading...');
   const [dbConnection, setDbConnection] = useState('Checking...');
+  const [isSidebarOpen, setIsSidebarOpen]= useState(false);
+
+  const toggleSidebar = ()=>{ // to change state of the sidebar 
+    setIsSidebarOpen(!isSidebarOpen)
+  }
 
   useEffect(() => {
     // Test backend connection
@@ -28,39 +33,39 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
+      <Header onSidebarClick={toggleSidebar} isOpenSidebar={isSidebarOpen}/> // pass state of sidebar to componenets
+      // when button is clicked in the header componenet the toggle function defined above is called 
+      // header is deciding whether to open /close sidebar hence toggle function passed in header only which helps in changing side bar state 
       <Searchbar />
-      <Sidebar />
-      <header className="App-header">
-        <h1>🚀 Task Manager</h1>
-        <p>Welcome to the Task Management System</p>
-        
-        <div style={{ margin: '20px 0' }}>
-          <div style={{ 
-            padding: '10px', 
-            backgroundColor: backendStatus.includes('healthy') ? '#4CAF50' : '#f44336',
-            borderRadius: '5px',
-            margin: '5px 0',
-            color: 'white'
-          }}>
-            {backendStatus}
-          </div>
-          
-          <div style={{ 
-            padding: '10px', 
-            backgroundColor: dbConnection.includes('Connected') ? '#4CAF50' : '#ff9800',
-            borderRadius: '5px',
-            margin: '5px 0',
-            color: 'white'
-          }}>
-            {dbConnection}
-          </div>
+      <div className="main-layout">
+        <Sidebar isOpenSidebar={isSidebarOpen}/>
+        <div className="content-area">
+          <KanbanBoard />
         </div>
-
-        <p style={{ fontSize: '14px', opacity: 0.8 }}>
-          🐳 All services running in Docker containers
-        </p>
-      </header>
+      </div>
+      
+      {/* Status indicators - you can remove these later */}
+      <div className="status-indicators">
+        <div style={{ 
+          padding: '10px', 
+          backgroundColor: backendStatus.includes('healthy') ? '#4CAF50' : '#f44336',
+          borderRadius: '5px',
+          margin: '5px 0',
+          color: 'white'
+        }}>
+          {backendStatus}
+        </div>
+        
+        <div style={{ 
+          padding: '10px', 
+          backgroundColor: dbConnection.includes('Connected') ? '#4CAF50' : '#ff9800',
+          borderRadius: '5px',
+          margin: '5px 0',
+          color: 'white'
+        }}>
+          {dbConnection}
+        </div>
+      </div>
     </div>
   );
 }

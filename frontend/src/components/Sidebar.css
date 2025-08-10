@@ -1,3 +1,16 @@
+.sidebar-closed {
+    width: 60px;
+    padding: 1rem 0.5rem;
+    overflow: hidden;
+}
+  
+.sidebar-closed .sidebar-title,
+.sidebar-closed .project-item,
+.sidebar-closed .stat-item,
+.sidebar-closed .add-project-btn {
+    display: none;
+}
+
 .sidebar-container {
     width: 240px;
     background: #F9FAFB;
@@ -7,37 +20,37 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-  }
-  
-  .sidebar-title {
+}
+
+.sidebar-title {
     font-size: 1.1rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
     color: #1F2937;
-  }
-  
-  .project-list {
+}
+
+.project-list {
     list-style: none;
     padding: 0;
     margin: 0 0 1rem 0;
-  }
-  
-  .project-item {
+}
+
+.project-item {
     padding: 0.5rem 0.75rem;
     border-radius: 8px;
     margin-bottom: 0.25rem;
     cursor: pointer;
     color: #374151;
     transition: background 0.2s;
-  }
-  
-  .project-item:hover,
-  .project-item.active {
+}
+
+.project-item:hover,
+.project-item.active {
     background: #DBEAFE;
     color: #1E40AF;
-  }
-  
-  .add-project-btn {
+}
+
+.add-project-btn {
     width: 100%;
     padding: 0.5rem;
     background: #3B82F6;
@@ -48,21 +61,28 @@
     cursor: pointer;
     margin-top: 0.5rem;
     transition: background 0.2s;
-  }
-  
-  .add-project-btn:hover {
+}
+
+.add-project-btn:hover {
     background: #1E40AF;
-  }
-  
-  .sidebar-stats {
+}
+
+.sidebar-stats {
     margin-top: 2rem;
-  }
-  
-  .stat-item {
+}
+
+.stat-item {
     font-size: 1rem;
     margin-bottom: 0.5rem;
     color: #374151;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-  }
+}
+
+.sidebar-closed:hover .sidebar-title,
+.sidebar-closed:hover .project-item,
+.sidebar-closed:hover .stat-item,
+.sidebar-closed:hover .add-project-btn {
+  display: block;
+}
