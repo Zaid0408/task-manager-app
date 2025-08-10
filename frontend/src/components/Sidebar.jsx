@@ -1,10 +1,10 @@
 import React from "react";
 import './Sidebar.css'
 
-function Sidebar(isOpenSidebar){
+function Sidebar({isOpenSidebar}){
     return ( 
         
-        <aside className={`sidebar-container $(isOpenSidebar ? 'sidebar-container':'sidebar-closed')` }>
+        <aside className={`sidebar-container ${isOpenSidebar ? 'sidebar-open' : 'sidebar-closed'}` }>
             <div className="sidebar-projects">
                 <h2 className="sidebar-title" >Projects</h2>
                 <ul className="project-list">

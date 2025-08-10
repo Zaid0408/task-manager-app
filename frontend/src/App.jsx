@@ -33,9 +33,10 @@ function App() {
 
   return (
     <div className="App">
-      <Header onSidebarClick={toggleSidebar} isOpenSidebar={isSidebarOpen}/> // pass state of sidebar to componenets
-      // when button is clicked in the header componenet the toggle function defined above is called 
-      // header is deciding whether to open /close sidebar hence toggle function passed in header only which helps in changing side bar state 
+      <Header onSidebarClick={toggleSidebar} isOpenSidebar={isSidebarOpen}/> 
+       {/* pass state of sidebar to componenets
+      when button is clicked in the header componenet the toggle function defined above is called 
+      header is deciding whether to open /close sidebar hence toggle function passed in header only which helps in changing side bar state  */}
       <Searchbar />
       <div className="main-layout">
         <Sidebar isOpenSidebar={isSidebarOpen}/>
