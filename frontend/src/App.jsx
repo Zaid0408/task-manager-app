@@ -4,12 +4,14 @@ import Header from './components/Header';
 import KanbanBoard from './components/KanbanBoard';
 import Searchbar from './components/Searchbar';
 import Sidebar from './components/Sidebar';
-import Taskbar from './components/Taskbar';
+import Modal from './components/Modal';
+import TaskForm from './components/TaskForm';
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('Loading...');
   const [dbConnection, setDbConnection] = useState('Checking...');
   const [isSidebarOpen, setIsSidebarOpen]= useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const toggleSidebar = ()=>{ // to change state of the sidebar 
     setIsSidebarOpen(!isSidebarOpen)
@@ -37,13 +39,20 @@ function App() {
        {/* pass state of sidebar to componenets
       when button is clicked in the header componenet the toggle function defined above is called 
       header is deciding whether to open /close sidebar hence toggle function passed in header only which helps in changing side bar state  */}
-      <Searchbar />
+      <Searchbar onCreateClick={() => setIsCreateOpen(true)} />
       <div className="main-layout">
         <Sidebar isOpenSidebar={isSidebarOpen}/>
         <div className="content-area">
           <KanbanBoard />
         </div>
       </div>
+      <Modal isOpen={isCreateOpen} title="Create Task" onClose={() => setIsCreateOpen(false)}>
+        <TaskForm 
+          projects={[{ id: 1, name: 'Task Manager' }, { id: 2, name: 'Frontend Project' }]}
+          onSubmit={() => setIsCreateOpen(false)}
+          onCancel={() => setIsCreateOpen(false)}
+        />
+      </Modal>
       
       {/* Status indicators - you can remove these later */}
       <div className="status-indicators">

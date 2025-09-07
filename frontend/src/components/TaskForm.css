@@ -1,10 +1,16 @@
 .task-form-container {
-    background: white;
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
+    /* Ensure the form fits within modal body without overflowing */
+    box-sizing: border-box;
     width: 100%;
+    max-width: 100%;
+    padding: 1rem;
+    /* Let the modal provide background/shadow so we don't double wrap */
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    /* Constrain height within viewport when many fields; scroll internally */
+    max-height: 70vh;
+    overflow: auto;
 }
 
 .task-form {

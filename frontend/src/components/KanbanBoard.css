@@ -32,17 +32,4 @@
   flex-direction: column;
   gap: 1rem;
 }
-
-.kanban-task-card {
-  background: #DBEAFE;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  color: #1E40AF;
-  font-size: 1rem;
-  box-shadow: 0 1px 4px rgba(59,130,246,0.08);
-  transition: box-shadow 0.2s;
-}
-
-.kanban-task-card:hover {
-  box-shadow: 0 4px 12px rgba(59,130,246,0.15);
-}
+/* removed placeholder .kanban-task-card styles; real cards come from TaskCard */

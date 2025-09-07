@@ -1,0 +1,19 @@
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #6B7280;
+}
+
+.empty-illustration {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-title {
+  margin: 0.25rem 0;
+  color: #111827;
+}
+
+.empty-description {
+  margin: 0;
+}

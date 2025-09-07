@@ -1,6 +1,6 @@
 import React from "react";
 import './KanbanBoard.css'
-import TaskCard from "./Taskcard";
+import TaskCard from './TaskCard'
 import {useState,useEffect } from 'react';
 
 function KanbanBoard(){
@@ -58,6 +58,42 @@ function KanbanBoard(){
                 priority: "High",
                 project: { name: "Task Manager" },
                 due_date: "2024-01-15"
+            },
+            {
+                id: 7,
+                title: "Write unit tests",
+                description: "Add tests for components and reducers",
+                status: "TODO",
+                priority: "Medium",
+                project: { name: "Task Manager" },
+                due_date: "2024-02-01"
+            },
+            {
+                id: 8,
+                title: "Refactor Kanban columns",
+                description: "Extract reusable column component",
+                status: "IN_PROGRESS",
+                priority: "Low",
+                project: { name: "Frontend Project" },
+                due_date: "2024-02-05"
+            },
+            {
+                id: 9,
+                title: "Implement modal for task details",
+                description: "Move actions and status into modal",
+                status: "CODE REVIEW",
+                priority: "High",
+                project: { name: "Task Manager" },
+                due_date: "2024-02-03"
+            },
+            {
+                id: 10,
+                title: "Deploy preview environment",
+                description: "Set up Vercel preview for frontend",
+                status: "DONE",
+                priority: "Low",
+                project: { name: "Infra" },
+                due_date: "2024-01-28"
             }
 
     ])
@@ -72,6 +108,8 @@ function KanbanBoard(){
         console.log("Status Change : ", taskId , "to", newStatus)
     }
 
+    const normalize = (status) => (status || '').trim().toUpperCase().replace(/\s+/g, '_');
+
     return(
 
         <div className="kanban-board-container">
@@ -80,11 +118,7 @@ function KanbanBoard(){
                     TODO
                 </h2>
                 <div className="kanban-tasks-list">
-                    <div className="kanban-task-card">Integrate front end & backend</div>
-                    <div className="kanban-task-card">DSA</div>
-                    <div className="kanban-task-card">Design system</div>
-                    <div className="kanban-task-card">finish react code </div>
-                    {tasks.filter(task => task.status === 'TODO').map(task => (
+                    {tasks.filter(task => normalize(task.status) === 'TODO').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}
@@ -100,11 +134,7 @@ function KanbanBoard(){
                     IN PROGRESS
                 </h2>
                 <div className="kanban-tasks-list">
-                    <div className="kanban-task-card">so</div>
-                    <div className="kanban-task-card">A</div>
-                    <div className="kanban-task-card">B</div>
-                    <div className="kanban-task-card">C</div>
-                    {tasks.filter(task => task.status === 'IN_PROGRESS').map(task => (
+                    {tasks.filter(task => normalize(task.status) === 'IN_PROGRESS').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}
@@ -120,11 +150,7 @@ function KanbanBoard(){
                     CODE REVIEW
                 </h2>
                 <div className="kanban-tasks-list">
-                    <div className="kanban-task-card">code in review</div>
-                    <div className="kanban-task-card">code in review</div>
-                    <div className="kanban-task-card">code in review</div>
-                    <div className="kanban-task-card">code in review</div>
-                    {tasks.filter(task => task.status === 'CODE_REVIEW').map(task => (
+                    {tasks.filter(task => normalize(task.status) === 'CODE_REVIEW').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}
@@ -138,11 +164,7 @@ function KanbanBoard(){
             <div className="kanban-column">
                 <h2 className="kanban-column-title">DONE</h2> 
                 <div className="kanban-tasks-list">
-                    <div className="kanban-task-card">review</div>
-                    <div className="kanban-task-card">deploy</div>
-                    <div className="kanban-task-card">test</div>
-                    <div className="kanban-task-card">done </div>
-                    {tasks.filter(task => task.status === 'DONE').map(task => (
+                    {tasks.filter(task => normalize(task.status) === 'DONE').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}

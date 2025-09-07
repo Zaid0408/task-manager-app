@@ -35,3 +35,19 @@
 .search-btn:hover {
     background: #1E40AF;
 }
+/* create task in he same div as search bar */
+.create-task-btn {
+    margin-left: 0.75rem;
+    padding: 0.5rem 0.9rem;
+    background: #10B981;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.create-task-btn:hover {
+    background: #059669;
+}
