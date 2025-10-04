@@ -148,7 +148,7 @@ function KanbanBoard(){
                     TODO
                 </h2>
                 <div className="kanban-tasks-list">
-                    {tasks1.filter(task => normalize(task.status) === 'TODO').map(task => (
+                    {tasks.filter(task => normalize(task.status) === 'TODO').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}
@@ -164,7 +164,7 @@ function KanbanBoard(){
                     IN PROGRESS
                 </h2>
                 <div className="kanban-tasks-list">
-                    {tasks1.filter(task => normalize(task.status) === 'IN_PROGRESS').map(task => (
+                    {tasks.filter(task => normalize(task.status) === 'IN_PROGRESS').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}
@@ -180,7 +180,7 @@ function KanbanBoard(){
                     CODE REVIEW
                 </h2>
                 <div className="kanban-tasks-list">
-                    {tasks1.filter(task => normalize(task.status) === 'CODE_REVIEW').map(task => (
+                    {tasks.filter(task => normalize(task.status) === 'CODE_REVIEW').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}
@@ -194,7 +194,7 @@ function KanbanBoard(){
             <div className="kanban-column">
                 <h2 className="kanban-column-title">DONE</h2> 
                 <div className="kanban-tasks-list">
-                    {tasks1.filter(task => normalize(task.status) === 'DONE').map(task => (
+                    {tasks.filter(task => normalize(task.status) === 'DONE').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}

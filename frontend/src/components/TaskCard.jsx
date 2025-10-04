@@ -27,9 +27,9 @@ function TaskCard({task, onEdit,onDelete,onStatusChange}){
                 <p className="task-description">
                     {task.description}
                 </p>
-                <span className="task-project">
+                {/* <span className="task-project">
                     📁 {task.project?.name || 'No Project'}
-                </span>
+                </span> */}
                 <span className="task-due-date">
                     📅 {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date'}
                 </span>

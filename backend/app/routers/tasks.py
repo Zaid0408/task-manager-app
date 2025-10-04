@@ -24,6 +24,8 @@ router=APIRouter(prefix="/tasks") # Added tasks path properly and added new task
 @router.get("/get_tasks",response_model=List[TaskSimple])
 async def get_tasks(db: Session= Depends(get_db)):
     tasks = db.query(TaskModel).join(ProjectModel).all()
+    if len(tasks) == 0:
+        raise HTTPException(status_code=404, detail="Tasks were not found")
     return [
         TaskSimple(
             id=task.id,
@@ -52,6 +54,25 @@ async def get_tasks_by_id(task_id : int,db: Session= Depends(get_db)):
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return task
+
+@router.get("/get_task_by_project_id/{project_id}", response_model=List[TaskSimple])
+async def get_task_by_project_id(project_id: int,db: Session= Depends(get_db)):
+    tasks = db.query(TaskModel).filter(TaskModel.project_id==project_id).all()
+    if len(tasks) == 0:
+        raise HTTPException(status_code=404, detail="Tasks not found for Project Id, Please enter valid Project Id.")
+    return [
+        TaskSimple(
+            id=task.id,
+            title=task.title,
+            description=task.description,
+            status=task.status,
+            priority=task.priority,
+            due_date=task.due_date,
+            project_id=task.project_id,
+            project_name=task.project.name,
+            created_at=task.created_at
+        ) for task in tasks
+    ]
 
 @router.put("/update_task/{task_id}", response_model=TaskSchema)
 async def update_task(task_id : int,updated_task : TaskCreate,db: Session= Depends(get_db)):
