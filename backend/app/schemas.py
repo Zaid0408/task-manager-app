@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, date
 from typing import List, Optional
 from enum import Enum
 # This file defines how data is sent to and from your API
@@ -11,6 +11,11 @@ class TaskStatusEnum(str, Enum):
     TESTING = "testing"
     DONE = "done"
 
+class TaskPriorityEnum(str, Enum):
+    HIGH = "High"
+    MEDIUM = "Medium"
+    LOW = "Low"
+
 # Base Schemas (what you need to create something):
 # define the minimum information needed to create a project or task
 class ProjectBase(BaseModel):
@@ -21,6 +26,8 @@ class TaskBase(BaseModel):
     title: str
     description: Optional[str] = None
     status: TaskStatusEnum = TaskStatusEnum.TODO
+    priority: TaskPriorityEnum = TaskPriorityEnum.MEDIUM
+    due_date: Optional[date] = None
 
 class CommentBase(BaseModel):
     content: str
@@ -85,9 +92,11 @@ class TaskSimple(BaseModel):
     title: str
     description: Optional[str]
     status: TaskStatusEnum
+    priority: TaskPriorityEnum
+    due_date: Optional[date]
     project_id: int
+    project_name: str
     created_at: datetime
-    updated_at: datetime
     
     class Config:
         from_attributes = True

@@ -2,9 +2,10 @@ import React from "react";
 import './KanbanBoard.css'
 import TaskCard from './TaskCard'
 import {useState,useEffect } from 'react';
+import { getTasks } from "../services/service.js";
 
 function KanbanBoard(){
-    const [tasks] = useState([ // sample data for now will integrate with the bapis later
+    const [tasks1] = useState([ // sample data for now will integrate with the bapis later
             {
                 id: 1,
                 title: "Integrate frontend & backend",
@@ -97,7 +98,36 @@ function KanbanBoard(){
             }
 
     ])
- // implement later after integrating APIs
+    const [tasks,setTasks]= useState([]);
+    const [loading, setLoading]= useState(false);
+    const [error, setError]= useState(null);
+    
+    useEffect(()=>{
+        setLoading(true);
+        setError(null);
+
+        getTasks()
+            .then((data)=>{
+                setTasks(data);
+                console.log("Retrieved data from api : "+ data);
+                setLoading(false);
+            })
+            .catch((error)=>{
+                setError("Failed to fetch tasks: "+error.message)
+                setLoading(false);
+            })
+    },[]);
+
+    if(loading){
+        return <p>Loading Tasks ...</p>
+    }
+    if(error){
+        return <p style={{ color: "red" }}>Error : {error}</p>
+    }
+    if (tasks.length === 0) {
+        return <p style={{ color: "red" }}>No tasks found.</p>;
+      }
+
     const handleEditTask= (task) =>{
         console.log("Edit Task :", task)
     }
@@ -118,7 +148,7 @@ function KanbanBoard(){
                     TODO
                 </h2>
                 <div className="kanban-tasks-list">
-                    {tasks.filter(task => normalize(task.status) === 'TODO').map(task => (
+                    {tasks1.filter(task => normalize(task.status) === 'TODO').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}
@@ -134,7 +164,7 @@ function KanbanBoard(){
                     IN PROGRESS
                 </h2>
                 <div className="kanban-tasks-list">
-                    {tasks.filter(task => normalize(task.status) === 'IN_PROGRESS').map(task => (
+                    {tasks1.filter(task => normalize(task.status) === 'IN_PROGRESS').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}
@@ -150,7 +180,7 @@ function KanbanBoard(){
                     CODE REVIEW
                 </h2>
                 <div className="kanban-tasks-list">
-                    {tasks.filter(task => normalize(task.status) === 'CODE_REVIEW').map(task => (
+                    {tasks1.filter(task => normalize(task.status) === 'CODE_REVIEW').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}
@@ -164,7 +194,7 @@ function KanbanBoard(){
             <div className="kanban-column">
                 <h2 className="kanban-column-title">DONE</h2> 
                 <div className="kanban-tasks-list">
-                    {tasks.filter(task => normalize(task.status) === 'DONE').map(task => (
+                    {tasks1.filter(task => normalize(task.status) === 'DONE').map(task => (
                         <TaskCard
                             key={task.id}
                             task={task}

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from ..database import get_db
-from ..models import Task as TaskModel, Comment
+from ..models import Task as TaskModel, Comment, Project as ProjectModel
 from ..schemas import (
     TaskCreate, 
     Task as TaskSchema, 
@@ -23,8 +23,20 @@ router=APIRouter(prefix="/tasks") # Added tasks path properly and added new task
 
 @router.get("/get_tasks",response_model=List[TaskSimple])
 async def get_tasks(db: Session= Depends(get_db)):
-    tasks = db.query(TaskModel).all()
-    return tasks
+    tasks = db.query(TaskModel).join(ProjectModel).all()
+    return [
+        TaskSimple(
+            id=task.id,
+            title=task.title,
+            description=task.description,
+            status=task.status,
+            priority=task.priority,
+            due_date=task.due_date,
+            project_id=task.project_id,
+            project_name=task.project.name,
+            created_at=task.created_at
+        ) for task in tasks
+    ]
 
 @router.post("/add_tasks",response_model=TaskSchema)
 async def add_tasks(task:TaskCreate,db: Session= Depends(get_db)):
@@ -74,14 +86,14 @@ async def delete_task(task_id:int , db: Session=Depends(get_db)):
     db.commit()
     return task_to_delete
 
-@router.post("/add_comment/{task_id}", response_model=CommentSchema)
-async def add_comment(task_id: int, comment: CommentCreate, db: Session=Depends(get_db)):
+@router.post("/add_comment", response_model=CommentSchema)
+async def add_comment(comment: CommentCreate, db: Session=Depends(get_db)):
     # First, ensure the task exists
-    db_task = db.query(TaskModel).filter(TaskModel.id == task_id).first()
+    db_task = db.query(TaskModel).filter(TaskModel.id == comment.task_id).first()
     if not db_task:
         raise HTTPException(status_code=404, detail="Task not found")
     # Create the comment with the content from the body and the task_id from the URL
-    db_comment=Comment(**comment.model_dump(), task_id=task_id)
+    db_comment=Comment(**comment.model_dump())
     db.add(db_comment)
     db.commit()
     db.refresh(db_comment)

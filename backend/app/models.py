@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Enum, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from enum import Enum as PyEnum
@@ -9,8 +9,12 @@ class TaskStatus(PyEnum):
     TODO = "todo"
     IN_PROGRESS = "in_progress"
     CODE_REVIEW = "code_review"
-    TESTING = "testing"
     DONE = "done"
+
+class TaskPriority(PyEnum):
+    HIGH = "High"
+    MEDIUM = "Medium"
+    LOW = "Low"
 
 # Projects Table
 # This class defines the 'projects' table. By inheriting from 'Base',
@@ -29,6 +33,7 @@ class Project(Base):
 
 # Tasks Table
 # This class defines the 'tasks' table and is also registered in the 'Base' catalog.
+# Added priority and due date 
 class Task(Base):
     __tablename__ = "tasks"
     
@@ -36,6 +41,8 @@ class Task(Base):
     title = Column(String(200), nullable=False)
     description = Column(Text)
     status = Column(Enum(TaskStatus), default=TaskStatus.TODO)
+    priority = Column(Enum(TaskPriority), default=TaskPriority.MEDIUM)
+    due_date = Column(Date)
     project_id = Column(Integer, ForeignKey("projects.id"))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
