@@ -25,6 +25,12 @@
     display: none;
 }
 
+/* hide sidebar when closed : above lines were not working */
+.sidebar-closed { 
+    opacity: 0;
+    pointer-events: none;
+}
+
 .sidebar-container {
     width: 320px;
     background: #F9FAFB;
