@@ -3,32 +3,17 @@ import {useState,useEffect } from 'react';
 import './Sidebar.css';
 import { getProjects, deleteProject, updateProject } from "../services/service.js";
 
-function Sidebar({isOpenSidebar, setSelectedProject}){
+function Sidebar({isOpenSidebar, projects ,setSelectedProject}){
 
-    const [projects,setProjects]= useState([]);
-    const [loading, setLoading]= useState(false);
     const [error, setError]= useState(null);
 
     useEffect(()=>{
-        setLoading(true);
+        if(!projects){
+            setError("Failed to get Projects");
+        }
         setError(null);
-
-        getProjects()
-            .then((data)=>{
-                setProjects(data);
-                console.log("Retrieved Projects from API: "+ data);
-                setLoading(false);
-            })
-            .catch((error)=>{
-                setError(error);
-                console.error("Error recieved: "+ error);
-                setLoading(false);
-            })
     }, [])
 
-    if(loading){
-        return <p>Loading Projects ...</p>
-    }
     if(error){
         return <p style={{ color: "red" }}>Error : {error}</p>
     }
@@ -46,6 +31,8 @@ function Sidebar({isOpenSidebar, setSelectedProject}){
     const handleProjectClick= (project) =>{
         setSelectedProject(project);
     }
+
+    
 
     return ( 
         

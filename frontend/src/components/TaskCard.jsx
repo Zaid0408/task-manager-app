@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import './TaskCard.css'
 import Modal from './Modal'
 
-function TaskCard({task, onEdit,onDelete,onStatusChange}){
+function TaskCard({task, projectName,onEdit,onDelete,onStatusChange}){
     const [isOpen, setIsOpen] = useState(false);
     const normalizedStatusClass = ((task.status || '')
         .trim()
@@ -27,9 +27,9 @@ function TaskCard({task, onEdit,onDelete,onStatusChange}){
                 <p className="task-description">
                     {task.description}
                 </p>
-                {/* <span className="task-project">
-                    📁 {task.project?.name || 'No Project'}
-                </span> */}
+                <span className="task-project">
+                    📁 {projectName || 'No Project'}
+                </span>
                 <span className="task-due-date">
                     📅 {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date'}
                 </span>
@@ -68,7 +68,7 @@ function TaskCard({task, onEdit,onDelete,onStatusChange}){
                 </p>
 
                 <div className="task-modal-meta-block">
-                    <span className="task-project">📁 {task.project?.name || 'No Project'}</span>
+                    <span className="task-project">📁 {projectName || 'No Project'}</span>
                 </div>
                 <div className="task-modal-meta-row">
                     <span className="task-due-date">📅 {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date'}</span>

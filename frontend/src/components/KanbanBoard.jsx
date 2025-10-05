@@ -4,7 +4,7 @@ import TaskCard from './TaskCard'
 import {useState,useEffect } from 'react';
 import { getTasks, getTasksByProjectId } from "../services/service.js";
 
-function KanbanBoard({selectedProject}){
+function KanbanBoard({selectedProject, projectsMap}){
 
     const [tasks,setTasks]= useState([]);
     const [loading, setLoading]= useState(false);
@@ -51,6 +51,8 @@ function KanbanBoard({selectedProject}){
     }
 
     const normalize = (status) => (status || '').trim().toUpperCase().replace(/\s+/g, '_');
+    const projectNameFor = (task) => projectsMap?.[task.project_id] || selectedProject?.name || 'No Project';
+      
 
     return(
 
@@ -64,6 +66,7 @@ function KanbanBoard({selectedProject}){
                         <TaskCard
                             key={task.id}
                             task={task}
+                            projectName={projectNameFor(task)}
                             onEdit={handleEditTask}
                             onDelete={handleDeleteTask}
                             onStatusChange={handleStatusChange}
@@ -80,6 +83,7 @@ function KanbanBoard({selectedProject}){
                         <TaskCard
                             key={task.id}
                             task={task}
+                            projectName={projectNameFor(task)}
                             onEdit={handleEditTask}
                             onDelete={handleDeleteTask}
                             onStatusChange={handleStatusChange}
@@ -96,6 +100,7 @@ function KanbanBoard({selectedProject}){
                         <TaskCard
                             key={task.id}
                             task={task}
+                            projectName={projectNameFor(task)}
                             onEdit={handleEditTask}
                             onDelete={handleDeleteTask}
                             onStatusChange={handleStatusChange}
@@ -110,6 +115,7 @@ function KanbanBoard({selectedProject}){
                         <TaskCard
                             key={task.id}
                             task={task}
+                            projectName={projectNameFor(task)}
                             onEdit={handleEditTask}
                             onDelete={handleDeleteTask}
                             onStatusChange={handleStatusChange}
