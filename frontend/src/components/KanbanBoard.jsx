@@ -2,102 +2,10 @@ import React from "react";
 import './KanbanBoard.css'
 import TaskCard from './TaskCard'
 import {useState,useEffect } from 'react';
-import { getTasks } from "../services/service.js";
+import { getTasks, getTasksByProjectId } from "../services/service.js";
 
-function KanbanBoard(){
-    const [tasks1] = useState([ // sample data for now will integrate with the bapis later
-            {
-                id: 1,
-                title: "Integrate frontend & backend",
-                description: "Connect React frontend with FastAPI backend",
-                status: "DONE",
-                priority: "High",
-                project: { name: "Task Manager" },
-                due_date: "2024-01-15"
-            },
-            {
-                id: 2,
-                title: "Design system",
-                description: "Create consistent UI components and styles",
-                status: "IN_PROGRESS",
-                priority: "Medium",
-                project: { name: "Task Manager" },
-                due_date: "2024-01-20"
-            },
-            {
-                id: 3,
-                title: "Design system",
-                description: "Work on Completing Fronend",
-                status: "IN_PROGRESS",
-                priority: "Medium",
-                project: { name: "Frontend Project" },
-                due_date: "2024-01-20"
-            },
-            {
-                id: 4,
-                title: "Go To Gym ",
-                description: "Go Lift weights ",
-                status: "TODO",
-                priority: "Medium",
-                project: { name: "GYM " },
-                due_date: "2024-01-20"
-            },
-            {
-                id:5,
-                title: "Sydney Sweeney ",
-                description: "That is it",
-                status: "CODE REVIEW",
-                priority: "High",
-                project: { name: "GYM " },
-                due_date: "2024-01-20"
-            },
-            {
-                id: 6,
-                title: "Make API connecter file to connect frontend and backend ",
-                description: "Connect React frontend with FastAPI backend",
-                status: "TODO ",
-                priority: "High",
-                project: { name: "Task Manager" },
-                due_date: "2024-01-15"
-            },
-            {
-                id: 7,
-                title: "Write unit tests",
-                description: "Add tests for components and reducers",
-                status: "TODO",
-                priority: "Medium",
-                project: { name: "Task Manager" },
-                due_date: "2024-02-01"
-            },
-            {
-                id: 8,
-                title: "Refactor Kanban columns",
-                description: "Extract reusable column component",
-                status: "IN_PROGRESS",
-                priority: "Low",
-                project: { name: "Frontend Project" },
-                due_date: "2024-02-05"
-            },
-            {
-                id: 9,
-                title: "Implement modal for task details",
-                description: "Move actions and status into modal",
-                status: "CODE REVIEW",
-                priority: "High",
-                project: { name: "Task Manager" },
-                due_date: "2024-02-03"
-            },
-            {
-                id: 10,
-                title: "Deploy preview environment",
-                description: "Set up Vercel preview for frontend",
-                status: "DONE",
-                priority: "Low",
-                project: { name: "Infra" },
-                due_date: "2024-01-28"
-            }
+function KanbanBoard({selectedProject}){
 
-    ])
     const [tasks,setTasks]= useState([]);
     const [loading, setLoading]= useState(false);
     const [error, setError]= useState(null);
@@ -106,7 +14,11 @@ function KanbanBoard(){
         setLoading(true);
         setError(null);
 
-        getTasks()
+        const fetchTasks= selectedProject 
+        ? getTasksByProjectId(selectedProject.id)
+        : getTasks();
+
+        fetchTasks
             .then((data)=>{
                 setTasks(data);
                 console.log("Retrieved data from api : "+ data);
@@ -116,7 +28,7 @@ function KanbanBoard(){
                 setError("Failed to fetch tasks: "+error.message)
                 setLoading(false);
             })
-    },[]);
+    },[selectedProject]);// Depends on selectedProject 
 
     if(loading){
         return <p>Loading Tasks ...</p>

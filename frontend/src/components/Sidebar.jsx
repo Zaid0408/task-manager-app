@@ -1,9 +1,9 @@
 import React from "react";
 import {useState,useEffect } from 'react';
 import './Sidebar.css';
-import { getProjects } from "../services/service.js";
+import { getProjects, deleteProject, updateProject } from "../services/service.js";
 
-function Sidebar({isOpenSidebar}){
+function Sidebar({isOpenSidebar, setSelectedProject}){
 
     const [projects,setProjects]= useState([]);
     const [loading, setLoading]= useState(false);
@@ -34,13 +34,17 @@ function Sidebar({isOpenSidebar}){
     }
     if (projects.length === 0) {
         return <p style={{ color: "red" }}>No Projects found.</p>;
-      }
-
-    const handleEditProject= (task) =>{
-        console.log("Edit Task :", task)
     }
-    const handleDeleteProject= (taskId) =>{
-        console.log("Delete Task Id :", taskId)
+
+    const handleEditProject= (project) =>{
+        console.log("Edit Project :", project)
+    }
+    const handleDeleteProject= (projectId) =>{
+        console.log("Delete Project Id :", projectId)
+    }
+
+    const handleProjectClick= (project) =>{
+        setSelectedProject(project);
     }
 
     return ( 
@@ -49,14 +53,22 @@ function Sidebar({isOpenSidebar}){
             <div className="sidebar-projects">
                 <h2 className="sidebar-title" >All Tasks</h2>
                 <ul className="project-list">
-                <li className="project-item">View All Tasks</li>
+                <li className="project-item"
+                    onClick={()=> handleProjectClick(null)} // null means "all tasks"
+                    style={{cursor:'pointer'}}
+                >
+                    View All Tasks</li>
                 </ul>
             </div>
             <div className="sidebar-projects">
                 <h2 className="sidebar-title" >Projects</h2>
                 <ul className="project-list">
                     {projects.map(project => (
-                        <li key={project.id} className="project-item">
+                        <li key={project.id} 
+                            className="project-item"
+                            onClick={()=> handleProjectClick(project)} // Passing entire project object so as to filter the tasks by project id.
+                            style={{cursor:'pointer'}}
+                        >
                             {project.name}
                         </li>
                     ))}

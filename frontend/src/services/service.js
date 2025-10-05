@@ -40,6 +40,11 @@ export async function getTaskById(taskId) {
     return result;
 }
 
+export async function getTasksByProjectId(projectId) {
+    const result = await getRequest(`/tasks/get_task_by_project_id/${projectId}`);
+    return result;
+}
+
 export async function createTask(taskPayload) {
     const result = await postRequest('/tasks/add_tasks',taskPayload);
     return result;

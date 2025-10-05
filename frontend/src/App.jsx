@@ -12,6 +12,7 @@ function App() {
   const [dbConnection, setDbConnection] = useState('Checking...');
   const [isSidebarOpen, setIsSidebarOpen]= useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [selectedProject, setSelectedProject]= useState(null);
 
   const toggleSidebar = ()=>{ // to change state of the sidebar 
     setIsSidebarOpen(!isSidebarOpen)
@@ -41,9 +42,12 @@ function App() {
       header is deciding whether to open /close sidebar hence toggle function passed in header only which helps in changing side bar state  */}
       <Searchbar onCreateClick={() => setIsCreateOpen(true)} />
       <div className="main-layout">
-        <Sidebar isOpenSidebar={isSidebarOpen}/>
+        <Sidebar isOpenSidebar={isSidebarOpen} setSelectedProject={setSelectedProject}/>
+            {/* pass state of project/ project object to kanban board
+          when project is clicked in the sidebar the toggle function defined above is called 
+          sidebar is deciding which project to display in the kanban board hence toggle function passed in header only which helps in changing side bar state  */}
         <div className="content-area">
-          <KanbanBoard />
+          <KanbanBoard selectedProject={selectedProject} />
         </div>
       </div>
       <Modal isOpen={isCreateOpen} title="Create Task" onClose={() => setIsCreateOpen(false)}>
