@@ -6,14 +6,17 @@ import Searchbar from './components/Searchbar';
 import Sidebar from './components/Sidebar';
 import Modal from './components/Modal';
 import TaskForm from './components/TaskForm';
+import ProjectForm from './components/ProjectForm.jsx';
 import {getProjects} from "./services/service.js";
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('Loading...');
   const [dbConnection, setDbConnection] = useState('Checking...');
   const [isSidebarOpen, setIsSidebarOpen]= useState(false);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isCreateOpen, setIsCreateTaskOpen] = useState(false);
   const [selectedProject, setSelectedProject]= useState(null);
+  const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
+
 
   const [projects, setProjects] = useState([]); 
 
@@ -52,15 +55,30 @@ function App() {
     }, {});
   }, [projects]);
 
+  const projectOptions = Object.entries(projectsMap).map(([id, name]) => ({ id: Number(id), name }));
+
   return (
     <div className="App">
       <Header onSidebarClick={toggleSidebar} isOpenSidebar={isSidebarOpen}/> 
        {/* pass state of sidebar to componenets
       when button is clicked in the header componenet the toggle function defined above is called 
       header is deciding whether to open /close sidebar hence toggle function passed in header only which helps in changing side bar state  */}
-      <Searchbar onCreateClick={() => setIsCreateOpen(true)} />
+      <Searchbar onCreateClick={() => setIsCreateTaskOpen(true)} />
       <div className="main-layout">
-        <Sidebar isOpenSidebar={isSidebarOpen} projects={projects} setSelectedProject={setSelectedProject}/>
+        <Sidebar isOpenSidebar={isSidebarOpen} 
+                 projects={projects} 
+                 setSelectedProject={setSelectedProject}
+                 onAddProjectClick={() => setIsCreateProjectOpen(true)}
+        />
+        <Modal isOpen={isCreateProjectOpen} title="Create Project" onClose={() => setIsCreateProjectOpen(false)}>
+            <ProjectForm
+              onSubmit={(payload) => {
+                // later: call createProject(payload)
+                setIsCreateProjectOpen(false);
+              }}
+              onCancel={() => setIsCreateProjectOpen(false)}
+            />
+        </Modal>
             {/* pass state of project/ project object to kanban board
           when project is clicked in the sidebar the toggle function defined above is called 
           sidebar is deciding which project to display in the kanban board hence toggle function passed in header only which helps in changing side bar state  */}
@@ -68,11 +86,11 @@ function App() {
           <KanbanBoard selectedProject={selectedProject} projectsMap={projectsMap} />
         </div>
       </div>
-      <Modal isOpen={isCreateOpen} title="Create Task" onClose={() => setIsCreateOpen(false)}>
+      <Modal isOpen={isCreateOpen} title="Create Task" onClose={() => setIsCreateTaskOpen(false)}>
         <TaskForm 
-          projects={[{ id: 1, name: 'Task Manager' }, { id: 2, name: 'Frontend Project' }]}
-          onSubmit={() => setIsCreateOpen(false)}
-          onCancel={() => setIsCreateOpen(false)}
+          projects={projectOptions}
+          onSubmit={() => setIsCreateTaskOpen(false)}
+          onCancel={() => setIsCreateTaskOpen(false)}
         />
       </Modal>
       

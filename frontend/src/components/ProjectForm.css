@@ -1,0 +1,113 @@
+/* ProjectForm.css */
+
+.project-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  
+  .project-form .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .project-form label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  
+  .project-form input[type="text"],
+  .project-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dfe3e6;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #2c3e50;
+    font-size: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+  
+  .project-form textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+  
+  .project-form input::placeholder,
+  .project-form textarea::placeholder {
+    color: #9aa7b2;
+  }
+  
+  .project-form input:focus,
+  .project-form textarea:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    background-color: #fbfbff;
+  }
+  
+  .project-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  
+  .project-form .form-actions button {
+    appearance: none;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.05s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+  
+  .project-form .form-actions button[type="button"] {
+    background-color: #eef2f7;
+    color: #34495e;
+  }
+  
+  .project-form .form-actions button[type="button"]:hover {
+    background-color: #e3e8ef;
+  }
+  
+  .project-form .form-actions button[type="submit"] {
+    background-color: #4f46e5;
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.25);
+  }
+  
+  .project-form .form-actions button[type="submit"]:hover {
+    background-color: #4338ca;
+    box-shadow: 0 6px 18px rgba(67, 56, 202, 0.3);
+  }
+  
+  .project-form .form-actions button:active {
+    transform: translateY(1px);
+  }
+  
+  /* Optional helper states for validation */
+  .project-form .error-text {
+    color: #d83939;
+    font-size: 12px;
+    margin-top: -4px;
+  }
+  
+  .project-form .field-error input,
+  .project-form .field-error textarea {
+    border-color: #d83939;
+    box-shadow: 0 0 0 3px rgba(216, 57, 57, 0.12);
+  }
+  
+  /* Make it play nicely inside your Modal */
+  .project-form {
+    /* If Modal content is narrow, ensure full width within it */
+    width: 100%;
+  }

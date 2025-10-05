@@ -67,7 +67,7 @@ function TaskForm({ initialData = {}, projects = [], onSubmit, onCancel }){
 
                 <div className="form-group">
                     <label className="form-label">Due date</label>
-                    <input className="form-input" type="date" value={dueDate} onChange={(e)=>setDueDate(e.target.value)} />
+                    <input className="form-input" type="date" value={dueDate} onChange={(e)=>setDueDate(e.target.value)} required/>
                 </div>
 
                 <div className="form-buttons">

@@ -3,7 +3,7 @@ import {useState,useEffect } from 'react';
 import './Sidebar.css';
 import { getProjects, deleteProject, updateProject } from "../services/service.js";
 
-function Sidebar({isOpenSidebar, projects ,setSelectedProject}){
+function Sidebar({isOpenSidebar, projects ,setSelectedProject, onAddProjectClick}){
 
     const [error, setError]= useState(null);
 
@@ -60,7 +60,7 @@ function Sidebar({isOpenSidebar, projects ,setSelectedProject}){
                         </li>
                     ))}
                 </ul>
-                <button className="add-project-btn">Add project +</button>
+                <button className="add-project-btn" onClick={onAddProjectClick}>Add project +</button>
             </div>
             <div className="sidebar-stats">
                 <h2 className="sidebar-title">Statistics</h2>
