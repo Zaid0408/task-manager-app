@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { createTask } from "../services/service.js";
 import './TaskForm.css'
 
 function TaskForm({ initialData = {}, projects = [], onSubmit, onCancel }){
@@ -7,9 +8,10 @@ function TaskForm({ initialData = {}, projects = [], onSubmit, onCancel }){
     const [dueDate, setDueDate] = useState(initialData.due_date || "");
     const [projectId, setProjectId] = useState(initialData.project_id || "");
     const [status, setStatus] = useState(initialData.status || "TODO");
-    const [priority, setPriority] = useState(initialData.priority || "Medium");
+    const [priority, setPriority] = useState(initialData.priority || "MEDIUM");
+    const [loading,setLoading]=useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault();
         const payload = {
             title,
@@ -19,8 +21,31 @@ function TaskForm({ initialData = {}, projects = [], onSubmit, onCancel }){
             status,
             priority,
         };
-        onSubmit && onSubmit(payload);
+        setLoading(true);
+        try {
+            const response = await createTask(payload);
+            if(response){
+                alert("Task Added Successfully!");
+                onSubmit && onSubmit(payload);
+                
+            }
+        } catch (error) {
+            console.error('Error adding Task:', error);
+            if(error.response?.status >= 400) {
+                alert(`Server error: ${error.response.status}`);
+            } else {
+                alert("Failed to add Task");
+            }
+        }
+        finally{
+            setLoading(false);
+        }
+        
     };
+
+    if(loading){
+        return <p> Adding Tasks... </p>
+    }
 
     return (
         <div className="task-form-container">
@@ -49,7 +74,7 @@ function TaskForm({ initialData = {}, projects = [], onSubmit, onCancel }){
                     <div className="form-group" style={{ flex:1 }}>
                         <label className="form-label">Status</label>
                         <select className="form-select" value={status} onChange={(e)=>setStatus(e.target.value)}>
-                            <option value="TODO">Todo</option>
+                            <option value="TODO">TODO</option>
                             <option value="IN_PROGRESS">In Progress</option>
                             <option value="CODE_REVIEW">Code Review</option>
                             <option value="DONE">Done</option>
@@ -58,9 +83,9 @@ function TaskForm({ initialData = {}, projects = [], onSubmit, onCancel }){
                     <div className="form-group" style={{ flex:1 }}>
                         <label className="form-label">Priority</label>
                         <select className="form-select" value={priority} onChange={(e)=>setPriority(e.target.value)}>
-                            <option value="High">High</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Low">Low</option>
+                            <option value="HIGH">High</option>
+                            <option value="MEDUIM">Medium</option>
+                            <option value="LOW">Low</option>
                         </select>
                     </div>
                 </div>
