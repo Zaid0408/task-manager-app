@@ -25,7 +25,7 @@ function ProjectForm({onSubmit, onCancel}){
                 <label >Project Description</label>
                 <input type="text" 
                         value={name} 
-                        placeholder="Enter Project Name" 
+                        placeholder="Enter Project Description" 
                         onChange={(e) => setName(e.target.value)}
                         rows={3}
                 />
