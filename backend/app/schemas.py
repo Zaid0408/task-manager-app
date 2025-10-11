@@ -5,16 +5,16 @@ from enum import Enum
 # This file defines how data is sent to and from your API
 # Task Status Enum for API
 class TaskStatusEnum(str, Enum):
-    TODO = "todo"
-    IN_PROGRESS = "in_progress"
-    CODE_REVIEW = "code_review"
-    TESTING = "testing"
-    DONE = "done"
+    TODO = "TODO"
+    IN_PROGRESS = "IN_PROGRESS"
+    CODE_REVIEW = "CODE_REVIEW"
+    TESTING = "TESTING"
+    DONE = "DONE"
 
 class TaskPriorityEnum(str, Enum):
-    HIGH = "High"
-    MEDIUM = "Medium"
-    LOW = "Low"
+    HIGH = "HIGH"
+    MEDIUM = "MEDIUM"
+    LOW = "LOW"
 
 # Base Schemas (what you need to create something):
 # define the minimum information needed to create a project or task

@@ -6,15 +6,15 @@ from .database import Base
 # defines how data is stored in the database
 # Task Status Enum
 class TaskStatus(PyEnum):
-    TODO = "todo"
-    IN_PROGRESS = "in_progress"
-    CODE_REVIEW = "code_review"
-    DONE = "done"
+    TODO = "TODO"
+    IN_PROGRESS = "IN_PROGRESS"
+    CODE_REVIEW = "CODE_REVIEW"
+    DONE = "DONE"
 
 class TaskPriority(PyEnum):
-    HIGH = "High"
-    MEDIUM = "Medium"
-    LOW = "Low"
+    HIGH = "HIGH"
+    MEDIUM = "MEDIUM"
+    LOW = "LOW"
 
 # Projects Table
 # This class defines the 'projects' table. By inheriting from 'Base',
