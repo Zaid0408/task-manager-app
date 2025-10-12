@@ -1,23 +1,29 @@
 import React, { useState } from "react";
-import { createProject } from "../services/service.js";
+import { createProject, updateProject } from "../services/service.js";
 import './ProjectForm.css'
+import ContextMenu from "./ContextMenu.jsx";
 
-function ProjectForm({onSubmit, onCancel}){
+function ProjectForm({onSubmit, onCancel, editMode, projectData}){
     const [name,setName]=useState('');
     const [description,setDescription]=useState('');
     const [loading,setLoading]=useState(false);
 
-    const addProject = async(e)=>{
+    const handleSubmit = async(e)=>{
         e.preventDefault();
         setLoading(true);
         
         const payload = {name : name, description: description}
         try {
-            const response = await createProject(payload);
-            if(response){
+            let response;
+            if (editMode) {
+                response = await updateProject(projectData.id, payload);
+                alert("Project Updated Successfully!");
+            } else {
+                response = await createProject(payload);
                 alert("Project Added Successfully!");
-                onSubmit?.({name, description}); // Call parent callback 
-                // needed as this will close the modal within which the project form is present
+            }
+            if(response){
+                onSubmit?.(payload);
             }
         } catch (error) {
             console.error('Error adding project:', error);
@@ -33,11 +39,11 @@ function ProjectForm({onSubmit, onCancel}){
     }
 
     if(loading){
-        return <p> Adding Projects... </p>
+        return <p> {editMode ? 'Updating' : 'Adding'} Projects... </p>
     }
 
     return(
-        <form onSubmit={addProject} className="project-form" >
+        <form onSubmit={handleSubmit} className="project-form" >
             <div className="form-group">
                 <label className="form-label">Project Name</label>
                 <input 
@@ -61,7 +67,9 @@ function ProjectForm({onSubmit, onCancel}){
                 />
             </div>
             <div className="form-buttons">
-                <button type="submit" disabled={loading} className="btn-submit">{loading ? "Creating... ": "Create Project"}</button>
+                <button type="submit" disabled={loading} className="btn-submit">
+                    {loading ? (editMode ? "Updating..." : "Creating...") : (editMode ? "Update Project" : "Create Project")}
+                </button>
                 <button type="button" className="btn-cancel" onClick={onCancel}>Cancel</button>
             </div>
         </form>

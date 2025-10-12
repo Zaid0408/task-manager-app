@@ -7,7 +7,7 @@ import Sidebar from './components/Sidebar';
 import Modal from './components/Modal';
 import TaskForm from './components/TaskForm';
 import ProjectForm from './components/ProjectForm.jsx';
-import {getProjects} from "./services/service.js";
+import {getProjects,updateProject} from "./services/service.js";
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('Loading...');
@@ -57,6 +57,37 @@ function App() {
 
   const projectOptions = Object.entries(projectsMap).map(([id, name]) => ({ id: Number(id), name }));
 
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingProject, setEditingProject] = useState(null);
+
+// Add this handler:
+  const handleEditProject = (project) => {
+      setEditingProject(project);
+      setShowEditModal(true);
+  };
+
+  const handleEditSubmit = async(updatedProject) => {
+      // Handle the update logic here
+      try {
+        const response= await updateProject(editingProject.id,updatedProject);
+        if(response) {
+          alert("Project Updated Successfully!");
+          // Refresh projects list
+          getProjects().then(data => {
+              setProjects(data || []);
+          });
+        }
+      } catch (error) {
+        alert("Error in updating project: "+ error)
+      }
+      finally{
+        setShowEditModal(false);
+        setEditingProject(null);
+      }
+      
+      // Refresh projects list
+  };
+
   return (
     <div className="App">
       <Header onSidebarClick={toggleSidebar} isOpenSidebar={isSidebarOpen}/> 
@@ -69,6 +100,7 @@ function App() {
                  projects={projects} 
                  setSelectedProject={setSelectedProject}
                  onAddProjectClick={() => setIsCreateProjectOpen(true)}
+                 onEditProject={handleEditProject}
         />
         <Modal isOpen={isCreateProjectOpen} title="Create Project" onClose={() => setIsCreateProjectOpen(false)}>
             <ProjectForm
@@ -79,6 +111,16 @@ function App() {
               onCancel={() => setIsCreateProjectOpen(false)}
             />
         </Modal>
+        {showEditModal && (
+        <Modal onClose={() => setShowEditModal(false)}>
+            <ProjectForm
+                editMode={true}
+                projectData={editingProject}
+                onSubmit={handleEditSubmit}
+                onCancel={() => setShowEditModal(false)}
+            />
+        </Modal>
+        )}
             {/* pass state of project/ project object to kanban board
           when project is clicked in the sidebar the toggle function defined above is called 
           sidebar is deciding which project to display in the kanban board hence toggle function passed in header only which helps in changing side bar state  */}
