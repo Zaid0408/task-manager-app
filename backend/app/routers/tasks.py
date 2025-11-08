@@ -81,6 +81,11 @@ async def update_task(task_id : int,updated_task : TaskCreate,db: Session= Depen
         raise HTTPException(status_code=404, detail="Task not found")
     task.title=updated_task.title if (updated_task.title != None) else task.title
     task.description=updated_task.description if (updated_task.description != None) else task.description
+    task.due_date=updated_task.due_date if (updated_task.due_date != None) else task.due_date
+    task.status=updated_task.status if (updated_task.status != None) else task.status
+    task.priority=updated_task.priority if (updated_task.priority != None) else task.priority
+    task.project_id=updated_task.project_id if (updated_task.project_id != None) else task.project_id
+    
     db.commit()
     db.refresh(task)
     return task
