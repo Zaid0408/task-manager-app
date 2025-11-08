@@ -109,7 +109,7 @@ function TaskForm({ initialData = {}, projects = [], onSubmit, onCancel ,editMod
                         <label className="form-label">Priority</label>
                         <select className="form-select" value={priority} onChange={(e)=>setPriority(e.target.value)}>
                             <option value="HIGH">High</option>
-                            <option value="MEDUIM">Medium</option>
+                            <option value="MEDIUM">Medium</option>
                             <option value="LOW">Low</option>
                         </select>
                     </div>

@@ -7,7 +7,7 @@ import Sidebar from './components/Sidebar';
 import Modal from './components/Modal';
 import TaskForm from './components/TaskForm';
 import ProjectForm from './components/ProjectForm.jsx';
-import {getProjects,updateProject,updateTask} from "./services/service.js";
+import {getProjects,updateProject,updateTask,deleteTask} from "./services/service.js";
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('Loading...');
@@ -82,6 +82,11 @@ function App() {
             alert("Task Updated Successfully!");
             // Trigger refresh in KanbanBoard by incrementing the refresh trigger
             setTasksRefreshTrigger(prev => prev + 1);
+            /**
+             * After editing a task, App.jsx increments refreshTrigger.
+              KanbanBoard's useEffect detects the change and re-fetches tasks.
+              The board updates with the latest data.
+             */
         }
     } catch (error) {
         alert("Error in updating task: "+ error)
@@ -91,7 +96,25 @@ function App() {
         setEditingTask(null);
     }
   };
-  const handleEditSubmit = async(updatedProject) => {
+
+  const handleDeleteTask = async(task) =>{
+    const confirmDelete=window.confirm(`Are you sure you want to delete the task: "${task.title}"?`)
+    if(!confirmDelete)
+      return;
+    try {
+      const response=await deleteTask(task.id);
+      if(response)
+      {
+          alert("Task Deleted Successfully !");
+          // Trigger refresh in KanbanBoard by incrementing the refresh trigger
+          setTasksRefreshTrigger(prev => prev + 1);
+      }
+    } catch (error) {
+      alert("Error in deleting task: "+ error)
+    }
+  }
+
+  const handleEditProjectSubmit = async(updatedProject) => {
       // Handle the update logic here
       try {
         const response= await updateProject(editingProject.id,updatedProject);
@@ -108,9 +131,8 @@ function App() {
       finally{
         setShowEditModal(false);
         setEditingProject(null);
+        setTasksRefreshTrigger(prev => prev + 1);
       }
-      
-      // Refresh projects list
   };
 
   return (
@@ -141,7 +163,7 @@ function App() {
             <ProjectForm
                 editMode={true}
                 projectData={editingProject}
-                onSubmit={handleEditSubmit}
+                onSubmit={handleEditProjectSubmit}
                 onCancel={() => setShowEditModal(false)}
             />
         </Modal>
@@ -150,7 +172,7 @@ function App() {
           when project is clicked in the sidebar the toggle function defined above is called 
           sidebar is deciding which project to display in the kanban board hence toggle function passed in header only which helps in changing side bar state  */}
         <div className="content-area">
-          <KanbanBoard selectedProject={selectedProject} projectsMap={projectsMap} onEditTask={handleEditTask} refreshTrigger={tasksRefreshTrigger} />
+          <KanbanBoard selectedProject={selectedProject} projectsMap={projectsMap} onEditTask={handleEditTask} refreshTrigger={tasksRefreshTrigger} onDeleteTask={handleDeleteTask} />
         </div>
       </div>
       <Modal isOpen={isCreateOpen} title="Create Task" onClose={() => setIsCreateTaskOpen(false)}>

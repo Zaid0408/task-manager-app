@@ -79,7 +79,7 @@ function TaskCard({task, projectName,onEdit,onDelete,onStatusChange}){
                     <button className="task-action-btn" onClick={() => { onEdit(task); setIsOpen(false); }}>
                         ✏️ Edit
                     </button>
-                    <button className="task-action-btn" onClick={() => { onDelete(task.id); setIsOpen(false); }}>
+                    <button className="task-action-btn" onClick={() => { onDelete(task); setIsOpen(false); }}>
                         🗑️ Delete
                     </button>
                 </div>
