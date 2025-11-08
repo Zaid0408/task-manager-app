@@ -4,7 +4,7 @@ import TaskCard from './TaskCard'
 import {useState,useEffect } from 'react';
 import { getTasks, getTasksByProjectId } from "../services/service.js";
 
-function KanbanBoard({selectedProject, projectsMap}){
+function KanbanBoard({selectedProject, projectsMap, onEditTask, refreshTrigger}){
 
     const [tasks,setTasks]= useState([]);
     const [loading, setLoading]= useState(false);
@@ -28,7 +28,7 @@ function KanbanBoard({selectedProject, projectsMap}){
                 setError("Failed to fetch tasks: "+error.message)
                 setLoading(false);
             })
-    },[selectedProject]);// Depends on selectedProject 
+    },[selectedProject, refreshTrigger]);// Depends on selectedProject and refreshTrigger 
 
     if(loading){
         return <p>Loading Tasks ...</p>
@@ -67,7 +67,7 @@ function KanbanBoard({selectedProject, projectsMap}){
                             key={task.id}
                             task={task}
                             projectName={projectNameFor(task)}
-                            onEdit={handleEditTask}
+                            onEdit={onEditTask}
                             onDelete={handleDeleteTask}
                             onStatusChange={handleStatusChange}
                         />
@@ -84,7 +84,7 @@ function KanbanBoard({selectedProject, projectsMap}){
                             key={task.id}
                             task={task}
                             projectName={projectNameFor(task)}
-                            onEdit={handleEditTask}
+                            onEdit={onEditTask}
                             onDelete={handleDeleteTask}
                             onStatusChange={handleStatusChange}
                         />
@@ -101,7 +101,7 @@ function KanbanBoard({selectedProject, projectsMap}){
                             key={task.id}
                             task={task}
                             projectName={projectNameFor(task)}
-                            onEdit={handleEditTask}
+                            onEdit={onEditTask}
                             onDelete={handleDeleteTask}
                             onStatusChange={handleStatusChange}
                         />
@@ -116,7 +116,7 @@ function KanbanBoard({selectedProject, projectsMap}){
                             key={task.id}
                             task={task}
                             projectName={projectNameFor(task)}
-                            onEdit={handleEditTask}
+                            onEdit={onEditTask}
                             onDelete={handleDeleteTask}
                             onStatusChange={handleStatusChange}
                         />

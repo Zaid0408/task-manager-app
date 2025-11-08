@@ -7,7 +7,7 @@ import Sidebar from './components/Sidebar';
 import Modal from './components/Modal';
 import TaskForm from './components/TaskForm';
 import ProjectForm from './components/ProjectForm.jsx';
-import {getProjects,updateProject} from "./services/service.js";
+import {getProjects,updateProject,updateTask} from "./services/service.js";
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('Loading...');
@@ -19,6 +19,7 @@ function App() {
 
 
   const [projects, setProjects] = useState([]); 
+  const [tasksRefreshTrigger, setTasksRefreshTrigger] = useState(0);
 
   const toggleSidebar = ()=>{ // to change state of the sidebar 
     setIsSidebarOpen(!isSidebarOpen)
@@ -59,13 +60,37 @@ function App() {
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
+  const [showEditTaskModal, setShowEditTaskModal] = useState(false);
+  const [editingTask, setEditingTask] = useState(null);
 
 // Add this handler:
   const handleEditProject = (project) => {
+      console.log("handleEditProject called with:", project);
       setEditingProject(project);
       setShowEditModal(true);
+      console.log("showEditModal set to true");
   };
 
+  const handleEditTask = (task) =>{
+    setEditingTask(task);
+    setShowEditTaskModal(true);
+  }
+  const handleEditTaskSubmit = async(updatedTask) => {
+    try {
+        const response = await updateTask(editingTask.id, updatedTask);
+        if(response) {
+            alert("Task Updated Successfully!");
+            // Trigger refresh in KanbanBoard by incrementing the refresh trigger
+            setTasksRefreshTrigger(prev => prev + 1);
+        }
+    } catch (error) {
+        alert("Error in updating task: "+ error)
+    }
+    finally{
+        setShowEditTaskModal(false);
+        setEditingTask(null);
+    }
+  };
   const handleEditSubmit = async(updatedProject) => {
       // Handle the update logic here
       try {
@@ -112,7 +137,7 @@ function App() {
             />
         </Modal>
         {showEditModal && (
-        <Modal onClose={() => setShowEditModal(false)}>
+        <Modal isOpen={showEditModal} title="Edit Project" onClose={() => setShowEditModal(false)}>
             <ProjectForm
                 editMode={true}
                 projectData={editingProject}
@@ -125,7 +150,7 @@ function App() {
           when project is clicked in the sidebar the toggle function defined above is called 
           sidebar is deciding which project to display in the kanban board hence toggle function passed in header only which helps in changing side bar state  */}
         <div className="content-area">
-          <KanbanBoard selectedProject={selectedProject} projectsMap={projectsMap} />
+          <KanbanBoard selectedProject={selectedProject} projectsMap={projectsMap} onEditTask={handleEditTask} refreshTrigger={tasksRefreshTrigger} />
         </div>
       </div>
       <Modal isOpen={isCreateOpen} title="Create Task" onClose={() => setIsCreateTaskOpen(false)}>
@@ -135,6 +160,17 @@ function App() {
           onCancel={() => setIsCreateTaskOpen(false)}
         />
       </Modal>
+      {showEditTaskModal && (
+        <Modal isOpen={showEditTaskModal} title="Edit Task" onClose={() => setShowEditTaskModal(false)}>
+          <TaskForm 
+            editMode={true}
+            taskData={editingTask}
+            projects={projectOptions}
+            onSubmit={handleEditTaskSubmit}
+            onCancel={() => setShowEditTaskModal(false)}
+          />
+        </Modal>
+      )}
       
       {/* Status indicators - you can remove these later */}
       <div className="status-indicators">

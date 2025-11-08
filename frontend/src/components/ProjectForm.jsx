@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { createProject, updateProject } from "../services/service.js";
+import React, { useState,useEffect } from "react";
+import { createProject } from "../services/service.js";
 import './ProjectForm.css'
 import ContextMenu from "./ContextMenu.jsx";
 
@@ -8,22 +8,33 @@ function ProjectForm({onSubmit, onCancel, editMode, projectData}){
     const [description,setDescription]=useState('');
     const [loading,setLoading]=useState(false);
 
+    useEffect(() => {
+        if (editMode && projectData) {
+            setName(projectData.name || '');
+            setDescription(projectData.description || '');
+        } else {
+            // Reset form when not in edit mode
+            setName('');
+            setDescription('');
+        }
+    }, [editMode, projectData]);
+
     const handleSubmit = async(e)=>{
         e.preventDefault();
         setLoading(true);
         
         const payload = {name : name, description: description}
         try {
-            let response;
             if (editMode) {
-                response = await updateProject(projectData.id, payload);
-                alert("Project Updated Successfully!");
-            } else {
-                response = await createProject(payload);
-                alert("Project Added Successfully!");
-            }
-            if(response){
+                // In edit mode, just call onSubmit - parent (App.jsx) will handle API call
                 onSubmit?.(payload);
+            } else {
+                // In create mode, handle API call here
+                const response = await createProject(payload);
+                if(response){
+                    alert("Project Added Successfully!");
+                    onSubmit?.(payload);
+                }
             }
         } catch (error) {
             console.error('Error adding project:', error);

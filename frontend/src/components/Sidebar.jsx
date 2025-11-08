@@ -90,6 +90,8 @@ function Sidebar({isOpenSidebar, projects ,setSelectedProject, onAddProjectClick
                 isVisible={contextMenu.isVisible}
                 position={contextMenu.position}
                 onEdit={() => {
+                    console.log("Edit clicked, project:", contextMenu.project);
+                    console.log("onEditProject function:", onEditProject);
                     hideContextMenu();
                     onEditProject?.(contextMenu.project);
                 }}

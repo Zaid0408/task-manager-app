@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { createTask } from "../services/service.js";
 import './TaskForm.css'
 
-function TaskForm({ initialData = {}, projects = [], onSubmit, onCancel }){
+function TaskForm({ initialData = {}, projects = [], onSubmit, onCancel ,editMode, taskData}){
     const [title, setTitle] = useState(initialData.title || "");
     const [description, setDescription] = useState(initialData.description || "");
     const [dueDate, setDueDate] = useState(initialData.due_date || "");
@@ -10,6 +10,25 @@ function TaskForm({ initialData = {}, projects = [], onSubmit, onCancel }){
     const [status, setStatus] = useState(initialData.status || "TODO");
     const [priority, setPriority] = useState(initialData.priority || "MEDIUM");
     const [loading,setLoading]=useState(false);
+
+    useEffect(() => {
+        if (editMode && taskData) {
+            setTitle(taskData.title || '');
+            setDescription(taskData.description || '');
+            setDueDate(taskData.due_date || '');
+            setProjectId(taskData.project_id || "");
+            setStatus(taskData.status || "TODO");
+            setPriority(taskData.priority || "MEDIUM");
+        } else {
+            // Reset form when not in edit mode
+            setTitle(initialData.title || "");
+            setDescription(initialData.description || "");
+            setDueDate(initialData.due_date || "");
+            setProjectId(initialData.project_id || "");
+            setStatus(initialData.status || "TODO");
+            setPriority(initialData.priority || "MEDIUM");
+        }
+    }, [editMode, taskData]);
 
     const handleSubmit = async(e) => {
         e.preventDefault();
@@ -23,11 +42,17 @@ function TaskForm({ initialData = {}, projects = [], onSubmit, onCancel }){
         };
         setLoading(true);
         try {
-            const response = await createTask(payload);
-            if(response){
-                alert("Task Added Successfully!");
+            if( editMode && taskData){
+                // In edit mode, just call onSubmit - parent (App.jsx) will handle API call
                 onSubmit && onSubmit(payload);
-                
+            }
+            else{
+                // In create mode, handle API call here
+                const response = await createTask(payload);
+                if(response){
+                    alert("Task Added Successfully!");
+                    onSubmit && onSubmit(payload);
+                }
             }
         } catch (error) {
             console.error('Error adding Task:', error);
