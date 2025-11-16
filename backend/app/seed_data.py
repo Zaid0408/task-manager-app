@@ -1,4 +1,3 @@
-from sqlalchemy.orm import Session
 from .models import Project as ProjectModel, Task as TaskModel, TaskStatus, TaskPriority
 from datetime import date, timedelta
 from .database import SessionLocal
@@ -55,7 +54,7 @@ def seed_database():
 
         
         # Create dummy tasks for each project
-        logger.info(f"Adding tasks now : ")
+        logger.info("Adding tasks now : ")
         tasks_data = [
             # Tasks for E-commerce Website (first project)
             {

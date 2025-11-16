@@ -3,12 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 import sys
 import time 
 import logging
-logger = logging.getLogger(__name__)
-
-# Import our database models and setup
-from .database import engine, Base
+from .database import engine, Base  # Import our database models and setup
 from .routers import projects, tasks
 from .seed_data import seed_database
+
+logger = logging.getLogger(__name__)
+
 
 app = FastAPI(title="Task Manager API", version="1.0.0")
 
