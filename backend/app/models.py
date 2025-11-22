@@ -56,10 +56,10 @@ class Task(Base):
 # This class defines the 'tasks' table and is also registered in the 'Base' catalog.
 # Key fields include email and hashed password which will hash the password and store it in the db
 class User(Base):
-    __tablename="users"
+    __tablename__="users"
     
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(255), unique, nullable=False)
+    email = Column(String(255), unique=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
     name = Column(String(100))
     created_at = Column(DateTime(timezone=True), server_default=func.now())

@@ -4,7 +4,7 @@ import sys
 import time 
 import logging
 from .database import engine, Base  # Import our database models and setup
-from .routers import projects, tasks
+from .routers import projects, tasks, auth
 from .seed_data import seed_database
 
 logger = logging.getLogger(__name__)
@@ -32,6 +32,7 @@ logger = logging.getLogger(__name__)
 # Include routers
 app.include_router(projects.router, tags=["projects"]) # Changed path of the APIs
 app.include_router(tasks.router, tags=["tasks"])
+app.include_router(auth.router, tags=["auth"])
 
 @app.get("/")
 async def root():
