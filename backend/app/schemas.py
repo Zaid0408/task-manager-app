@@ -109,3 +109,30 @@ class ProjectSimple(BaseModel):
     
     class Config:
         from_attributes = True
+        
+class UserSignup(BaseModel):
+    email: str
+    password: str 
+    name: str
+    username: Optional[str]
+    
+class UserLogin(BaseModel):
+    email: str
+    password: str 
+    
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "Bearer"
+    
+class UserInfo(BaseModel):
+    email: str
+    id: int 
+    name: str
+    username: Optional[str]
+    
+# internal schema for DB operations 
+class UserCreate(BaseModel): 
+    email: str
+    hashed_password : str
+    name : str
+    

@@ -1,11 +1,12 @@
-from .models import Project as ProjectModel, Task as TaskModel, TaskStatus, TaskPriority
+from .models import Project as ProjectModel, Task as TaskModel, TaskStatus, TaskPriority, User as UserModel
 from datetime import date, timedelta
 from .database import SessionLocal
+from .auth import get_password_hash
 
 import logging
 logger = logging.getLogger(__name__)
 
-def seed_database():
+def seed_database(): # change logic to include valid checking of apropriate data before adding them 
     """
     Add dummy data to the database for testing purposes.
     This function will be called during application startup.
@@ -14,7 +15,8 @@ def seed_database():
     try:
         # Check if we already have data to avoid duplicates
         existing_projects = db.query(ProjectModel).count()
-        if existing_projects > 0:
+        existing_users = db.query(UserModel).count()
+        if existing_projects > 0 :
             logger.info("Database already has data, skipping seed...")
             return
         
@@ -204,6 +206,63 @@ def seed_database():
         
     except Exception as e:
         logger.info(f"❌ Error seeding database: {e}")
+        db.rollback()
+    finally:
+        db.close() 
+        
+
+def seed_users():
+    """
+    Add dummy data to the database for testing purposes.
+    This function will be called during application startup.
+    """
+    db = SessionLocal()
+    try:
+        existing_users = db.query(UserModel).count()
+        if existing_users > 0 :
+            logger.info("Database already has users, skipping seed...")
+            return
+        
+        logger.info("Seeding database with dummy users...")
+        
+        users_data = [
+            {
+                "name":"Admin User",
+                "email":"admin@tm.com",
+                "password":"Ad123!@#",
+            },
+            {
+                "name":"Zaid Hasan",
+                "email":"zaid@tm.com",
+                "password":"Zh123!@#",
+            },
+            {
+                "name":"Batman ",
+                "email":"batman@tm.com",
+                "password":"Bm123!@#",
+            },
+            
+        ]
+        
+        for user in users_data:
+            password = user.pop("password")
+            hashed_password= get_password_hash(password)
+            user["hashed_password"]=hashed_password
+        
+        created_users = []
+        for user_data in users_data:
+            user = UserModel(**project_data)
+            db.add(user)
+        
+        # Commit projects first to ensure they have proper IDs
+        db.commit()
+        
+        # Now get the created projects to use their actual IDs
+        created_users = db.query(UserModel).all()
+        logger.info(f"✅ Created {len(created_users)} Users")
+        
+    except Exception as e:
+        logger.info(f"❌ Error seeding database for users: {e}")
         db.rollback()
     finally:
         db.close() 
