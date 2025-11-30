@@ -5,7 +5,7 @@ import time
 import logging
 from .database import engine, Base  # Import our database models and setup
 from .routers import projects, tasks, auth
-from .seed_data import seed_database
+from .seed_data import seed_database, seed_users
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +62,7 @@ async def startup_event():
 # Seed database
     logger.info("🌱 Starting database seeding...")
     try:
+        seed_users()
         seed_database()
         logger.info("✅ Database seeding completed!")
     except Exception as e:
