@@ -6,14 +6,20 @@ import Searchbar from './components/Searchbar';
 import Sidebar from './components/Sidebar';
 import Modal from './components/Modal';
 import TaskForm from './components/TaskForm';
+import LoginForm from './components/LoginForm.jsx';
+import SignUpForm from './components/SignUpForm.jsx';
 import ProjectForm from './components/ProjectForm.jsx';
 import {getProjects,updateProject,updateTask,deleteTask} from "./services/service.js";
+import {getToken, setToken, login, removeToken, logout, signup, isAuthenticated} from "./services/auth.js"
 
 function App() {
   const [backendStatus, setBackendStatus] = useState('Loading...');
   const [dbConnection, setDbConnection] = useState('Checking...');
   const [isSidebarOpen, setIsSidebarOpen]= useState(false);
   const [isCreateOpen, setIsCreateTaskOpen] = useState(false);
+  const [isLoginOpen,setIsLoginOpen] = useState(false);
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
+  const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
   const [selectedProject, setSelectedProject]= useState(null);
   const [isCreateProjectOpen, setIsCreateProjectOpen] = useState(false);
 
@@ -29,10 +35,19 @@ function App() {
 
     // To fetch and store projects in a map which will be allowed to be used everywhere
     getProjects().then(data => {
-      setProjects(data || []);
-      const objectLength = Object.keys(data).length;
-      console.log('Retrieved projects from api:', objectLength);
+      const projectsData = data || [];
+      setProjects(projectsData);
+      if (projectsData && typeof projectsData === 'object') {
+        const objectLength = Array.isArray(projectsData) ? projectsData.length : Object.keys(projectsData).length;
+        console.log('Retrieved projects from api:', objectLength);
+      }
     });
+    const authStatus = isAuthenticated();
+    setIsAuthenticatedState(authStatus); // Check authentication status on mount
+    // App loads → Check isAuthenticated() → If false, show login modal
+    if (!authStatus) {
+      setIsLoginOpen(true); 
+    }
     
     // Test backend connection
     fetch('http://localhost:8080/health')
@@ -48,6 +63,12 @@ function App() {
         console.error('Backend connection failed:', error);
       });
   }, []);
+
+  useEffect(()=>{
+    if(!isLoginOpen && !isSignUpOpen){
+      setIsAuthenticatedState(isAuthenticated());
+    }
+  },[isLoginOpen,isSignUpOpen]);
 
   const projectsMap = useMemo(() => {
     return projects.reduce((acc, p) => {
@@ -75,6 +96,16 @@ function App() {
     setEditingTask(task);
     setShowEditTaskModal(true);
   }
+
+  const handleLoginSuccess=()=>{
+    setIsAuthenticatedState(true);
+    setIsLoginOpen(false);
+  }
+  const handleSignUpSuccess=()=>{
+    setIsAuthenticatedState(true);
+    setIsSignUpOpen(false);
+  }
+
   const handleEditTaskSubmit = async(updatedTask) => {
     try {
         const response = await updateTask(editingTask.id, updatedTask);
@@ -135,9 +166,88 @@ function App() {
       }
   };
 
+
+  /**
+   * App loads → Check isAuthenticated() → If false, show login modal
+   * User clicks "Sign up" link → Close login modal, open signup modal
+   * User clicks "Log in" link → Close signup modal, open login modal
+   * User successfully logs in/signs up → Token stored → isAuthenticated() returns true → Show main app
+   * User clicks logout → Remove token → isAuthenticated() returns false → Show login modal
+   */
+
+  const handleSignUpSubmit = async(signUpPayload) =>{
+    try {
+      const response = await signup(signUpPayload).then(response => response.json());
+      if(response){
+        alert("Sign Up Successful");
+        const token = response.access_token; // need to check if proper 
+        setToken(token); 
+      }
+    }catch (error) {
+      alert("Error in Sign Up: "+ error)
+    }
+    finally{
+      setIsSignUpOpen(false);
+    }
+
+  }
+
+  const handleLogout = async() =>{
+    try {
+      const response = await logout({})
+      if(response){
+        alert("Log out Successful");
+        removeToken(); 
+        setIsAuthenticatedState(false);
+      }
+    }catch (error) {
+      alert("Error in log out: "+ error)
+    }
+    finally{
+      removeToken(); 
+      setIsAuthenticatedState(false);
+    }
+  }
+
   return (
     <div className="App">
-      <Header onSidebarClick={toggleSidebar} isOpenSidebar={isSidebarOpen}/> 
+      {/* Conditional rendering based on authentication */}
+      {!isAuthenticatedState ? (
+          // Show login/signup interface when not authenticated
+         <div className="auth-container">
+          <Modal
+            isOpen={isLoginOpen || (!isLoginOpen && !isSignUpOpen)}
+            title="Log In"
+            onClose={()=> setIsLoginOpen(false)}
+          >
+            <LoginForm 
+              onCancel={()=>setIsLoginOpen(false)}
+              onSwitchToSignUp={()=>{
+                setIsLoginOpen(false);
+                setIsSignUpOpen(true);
+              }}
+              onLoginSuccess={ handleLoginSuccess}
+            />
+          </Modal>
+
+          <Modal
+            isOpen={isSignUpOpen}
+            title="Sign Up"
+            onClose={()=> setIsSignUpOpen(false)}
+          >
+            <SignUpForm 
+              onCancel={()=> setIsSignUpOpen(false)}
+              onSwitchToLogin={()=>{
+                setIsLoginOpen(true);
+                setIsSignUpOpen(false);
+              }}
+              onSignUpSuccess={ handleSignUpSuccess}
+            />
+          </Modal>
+         </div>
+      ) : ( // Show main app when authenticated
+        <>
+      <Header onSidebarClick={toggleSidebar} isOpenSidebar={isSidebarOpen} onLogout={handleLogout}/> 
        {/* pass state of sidebar to componenets
       when button is clicked in the header componenet the toggle function defined above is called 
       header is deciding whether to open /close sidebar hence toggle function passed in header only which helps in changing side bar state  */}
@@ -216,6 +326,8 @@ function App() {
           {dbConnection}
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }
