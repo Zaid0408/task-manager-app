@@ -1,7 +1,5 @@
 import { getRequest, postRequest, putRequest, patchRequest, deleteRequest } from './api'
 
-const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:8080';
-
 // Project APIs
 export async function getProjects() {
   const result = await getRequest('/projects/get_projects');
